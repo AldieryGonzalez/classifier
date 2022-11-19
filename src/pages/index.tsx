@@ -28,6 +28,7 @@ type DotProps = {
 
 const Home: NextPage = () => {
   const [points, setPoints] = useState<Point[]>([]);
+  const [type, setType] = useState(0);
   const [rect, setRect] = useState<DOMRect>();
   const [boundary, setBoundary] = useState<Line>();
   const [pointsRemaining, setPointsRemaining] = useState(0);
@@ -52,6 +53,11 @@ const Home: NextPage = () => {
     setMakingBound(true);
   };
 
+  const handleClear = () => {
+    console.log("test");
+    setPoints([]);
+  };
+
   const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
     let rect = e.currentTarget.getBoundingClientRect();
     const coords = translateToOrigin(e.pageX, e.pageY, rect);
@@ -63,16 +69,34 @@ const Home: NextPage = () => {
         ...coords,
         id: points.length,
         trained: false,
-        type: 0,
+        type: type,
       };
       setPoints((current) => [...current, newPoint]);
     }
   };
 
+  const handleType = (type: number) => {
+    setType(type);
+    console.log(type);
+  };
+
   const handleTrain = async () => {
-    function sleep(ms: number) {
-      return new Promise((resolve) => setTimeout(resolve, ms));
+    let weights = [0, 0, 0];
+
+    function classify(weight: number[], feature: number[]) {
+      let sum = 0;
+      let zip = weight.map((w, i) => {
+        return [w, feature[i]];
+      });
+      zip.forEach(([w, f]) => {
+        if (w && f) {
+          sum += w * f;
+        }
+      });
+      if (sum > 0) return 1;
+      return 0;
     }
+
     let promise = Promise.resolve();
     points.forEach(async (point) => {
       promise = promise.then(function () {
@@ -90,6 +114,24 @@ const Home: NextPage = () => {
         });
       });
     });
+    promise.then(() => {
+      let incorrect = true;
+      while (incorrect) {
+        incorrect = false;
+        points.forEach((point) => {
+          const feature = [point.x, point.y, 1];
+          const type = classify(weights, feature);
+          if (type !== point.type) {
+            incorrect = true;
+            if (weights.length == feature.length) {
+              if (type == 1) weights = weights.map((w, i) => w - feature[i]);
+              if (type == 0) weights = weights.map((w, i) => w + feature[i]);
+            }
+          }
+        });
+      }
+      console.log(weights);
+    });
   };
 
   return (
@@ -100,7 +142,12 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="min-w-screen flex min-h-screen">
-        <Sidebar handleSetBounds={handleSetBounds} handleTrain={handleTrain} />
+        <Sidebar
+          handleSetBounds={handleSetBounds}
+          handleTrain={handleTrain}
+          handleType={handleType}
+          handleClear={handleClear}
+        />
         <div
           className=" relative flex grow items-center justify-center overflow-hidden bg-[#1f2725]"
           ref={canvasRef}
@@ -140,12 +187,12 @@ const Dot: React.FC<DotProps> = ({ point, rect }) => {
     return { x: newX, y: newY };
   };
   const { x, y } = translateFromCoord();
-  const borderColor = point.type ? "#519694" : "#C22D30";
+  const borderColor = point.type ? "#175E77" : "#C22D30";
   const backgroundColor = point.trained ? "#FFFFFF" : "#000000";
   if (point.trained) {
     return (
       <div
-        className="absolute h-2 w-2 animate-[ping_0.2s_cubic-bezier(0,0,0.2,1)_1] rounded-full border-2 border-solid"
+        className="absolute h-3 w-3 animate-[ping_0.2s_cubic-bezier(0,0,0.2,1)_1] rounded-full  border-4  border-solid"
         style={{
           top: `${y - 4}px`,
           left: `${x - 4}px`,
@@ -157,7 +204,7 @@ const Dot: React.FC<DotProps> = ({ point, rect }) => {
   }
   return (
     <div
-      className="absolute h-2 w-2 rounded-full border-2 border-solid"
+      className="absolute h-3 w-3 rounded-full border-4 border-solid"
       style={{
         top: `${y - 4}px`,
         left: `${x - 4}px`,
