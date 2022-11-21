@@ -13,6 +13,5 @@ const config = {
     locales: ["en"],
     defaultLocale: "en",
   },
-  basePath: "/classifier",
 };
 export default config;
