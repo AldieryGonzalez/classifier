@@ -3,7 +3,7 @@ import Head from "next/head";
 import Link from "next/link";
 import Sidebar from "../components/Sidebar";
 import classnames from "classnames";
-import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import React, { EffectCallback, useEffect, useRef, useState } from "react";
 
 type Point = {
   id: number;
@@ -42,15 +42,14 @@ const Home: NextPage = () => {
     points.some((point) => point.type == 1) &&
     points.some((point) => point.type == 0);
 
-  useLayoutEffect(() => {
-    if (!canvasRef.current) return () => {};
+  useEffect(() => {
     const observer = new ResizeObserver((entries) => {
       if (entries[0]) {
         setRect(entries[0].contentRect);
       }
     });
-    observer.observe(canvasRef.current);
-    return () => canvasRef.current && observer.unobserve(canvasRef.current);
+    observer.observe(canvasRef.current as HTMLDivElement);
+    return () => observer.unobserve(canvasRef.current as Element);
   }, []);
 
   const translateToOrigin = (x: number, y: number, rect: DOMRect) => {
