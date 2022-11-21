@@ -43,7 +43,7 @@ export const AlertProvider: React.FC<AlertProviderProps> = ({ children }) => {
     setDuration(duration);
   };
 
-  let alertProps = {
+  const alertProps = {
     message: message,
     header: header,
     duration: duration,

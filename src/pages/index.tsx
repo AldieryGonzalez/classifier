@@ -54,8 +54,8 @@ const Home: NextPage = () => {
   }, []);
 
   const translateToOrigin = (x: number, y: number, rect: DOMRect) => {
-    let newX = Math.round(x - (rect.left + rect.width / 2));
-    let newY = Math.round(y - (rect.top + rect.height / 2));
+    const newX = Math.round(x - (rect.left + rect.width / 2));
+    const newY = Math.round(y - (rect.top + rect.height / 2));
     return { x: newX, y: newY };
   };
 
@@ -93,7 +93,7 @@ const Home: NextPage = () => {
   const handleClick = (
     e: React.MouseEvent<HTMLDivElement> & { target: HTMLElement }
   ) => {
-    let rect = e.currentTarget.getBoundingClientRect();
+    const rect = e.currentTarget.getBoundingClientRect();
     const coords = translateToOrigin(e.pageX, e.pageY, rect);
     if (e.shiftKey) {
       handleDelete(e.target.id);
@@ -121,11 +121,11 @@ const Home: NextPage = () => {
       if (point.x < minX) minX = point.x;
     });
     if (weights[0] && weights[1] && weights[2]) {
-      let slope = -(weights[2] / weights[1]) / (weights[2] / weights[0]);
-      let minX_y = (weights[0] * minX + weights[2]) / (-1 * weights[1]);
+      const slope = -(weights[2] / weights[1]) / (weights[2] / weights[0]);
+      const minX_y = (weights[0] * minX + weights[2]) / (-1 * weights[1]);
 
-      let intercept = -slope * minX + minX_y;
-      let theta = Math.atan(slope) * (180 / Math.PI);
+      const intercept = -slope * minX + minX_y;
+      const theta = Math.atan(slope) * (180 / Math.PI);
 
       if (rect) {
         setBoundary({
@@ -147,7 +147,7 @@ const Home: NextPage = () => {
 
     function classify(weight: number[], feature: number[]) {
       let sum = 0;
-      let zip = weight.map((w, i) => {
+      const zip = weight.map((w, i) => {
         return [w, feature[i]];
       });
       zip.forEach(([w, f]) => {

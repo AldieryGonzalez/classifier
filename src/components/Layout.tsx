@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 import { Alert } from "./Alert";
 
 interface LayoutProps {
@@ -18,8 +18,9 @@ export default function Layout({ children, ...props }: LayoutProps) {
           variant={alertProps.variant}
           label={alertProps.header}
           duration={alertProps.duration}
-          children={alertProps.message}
-        />
+        >
+          {alertProps.message}
+        </Alert>
       ) : null}
     </div>
   );

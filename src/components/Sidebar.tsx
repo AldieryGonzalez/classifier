@@ -5,10 +5,10 @@ import RadioGroup from "./RadioGroup";
 import { useAlert } from "../contexts/AlertContext";
 
 type SidebarProps = {
-  handleSetBounds: Function;
-  handleTrain: Function;
-  handleClear: Function;
-  handleType: Function;
+  handleSetBounds: () => void;
+  handleTrain: () => void;
+  handleClear: () => void;
+  handleType: (type: number) => void;
   mouseData: { x: number; y: number };
   type: number;
   vector: number[];
@@ -20,7 +20,7 @@ type SectionHeaderProps = {
 };
 
 type ButtonProps = {
-  onClick: Function;
+  onClick: () => void;
   children: React.ReactNode;
   className?: string;
   disabled?: boolean;

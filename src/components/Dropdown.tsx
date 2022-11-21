@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import classNames from "classnames";
 
 type Props = {
-  handleType: Function;
+  handleType: (type: number) => void;
   children: React.ReactNode;
   variant: number;
 };
 type MenuItemProps = {
   children?: React.ReactNode;
-  onClick: Function;
+  onClick: () => void;
 };
 
 const options = [0, 1];
