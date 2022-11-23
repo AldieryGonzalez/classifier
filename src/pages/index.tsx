@@ -30,6 +30,7 @@ const Home: NextPage = () => {
   const [bias, setBias] = useState<number[]>([0, 0, 0]);
   const [type, setType] = useState(0);
   const [speed, setSpeed] = useState(20);
+  const [count, setCount] = useState(0);
   const [mouseData, setMouseData] = useState({ x: 0, y: 0 });
   const [rect, setRect] = useState<DOMRect>();
   const [boundary, setBoundary] = useState<Line>();
@@ -79,7 +80,7 @@ const Home: NextPage = () => {
 
   const handleClear = () => {
     console.log("test");
-    setPoints([]);
+    setPoints((current) => current.filter(() => false));
     setBias([0, 0, 0]);
     setBoundary({
       visible: false,
@@ -104,10 +105,11 @@ const Home: NextPage = () => {
     } else {
       const newPoint = {
         ...coords,
-        id: points.length,
+        id: count,
         trained: false,
         type: type,
       };
+      setCount((current) => current + 1);
       setPoints((current) => [...current, newPoint]);
     }
   };
@@ -242,6 +244,7 @@ const Home: NextPage = () => {
           ></div>
           {rect &&
             points.map((point) => {
+              console.log(point);
               return <Dot point={point} rect={rect} key={point.id} />;
             })}
         </div>
